@@ -1,0 +1,4 @@
+Apellido: carrera  Nombre: ignacio Numero de empleado: 5 Edad: 21 Dni: 22 
+Apellido: brambilla Nombre: miqueas Numero de empleado: 2 Edad: 21 Dni: 21 
+Apellido: vasquez Nombre: michael Numero de empleado: 3 Edad: 21 Dni: 00 
+Apellido: order Nombre: julian Numero de empleado: 8 Edad: 20 Dni: 43 
