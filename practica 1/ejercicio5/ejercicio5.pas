@@ -123,7 +123,7 @@ begin
     rewrite(archivo_guardar);
     while (not eof(p)) do begin
         read(p,c);
-        write(archivo_guardar, 'Codigo' , c.codigo, #10 + 'Nombre:' + c.nombre + #10 + 'Descripcion: ' + c.descripcion + #10 + 'Marca: ' + c.marca + #10 + 'Precio: ' ,c.precio, #10, 'Stock minimo: ', c.stock_minimo, #10 + 'Stock disponible: ', c.stock_disponible);
+        write(archivo_guardar, 'Codigo: ' , c.codigo, #10 + 'Nombre: ' + c.nombre + #10 + 'Descripcion: ' + c.descripcion + #10 + 'Marca: ' + c.marca + #10 + 'Precio: ' ,c.precio:2:2, #10, 'Stock minimo: ', c.stock_minimo, #10 + 'Stock disponible: ', c.stock_disponible);
     end;
     close(p);
     close(archivo_guardar);

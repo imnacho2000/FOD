@@ -129,15 +129,12 @@ Begin
   close(arch);
 End;
 
-Procedure crear(Var arch: arch_emp);
+Procedure crear(Var arch: arch_emp; nombre: string);
 
 Var 
-  nombre_archivo: string;
   e: empleado;
 Begin
-  write('Ingrese nombre de archivo: ');
-  readln(nombre_archivo);
-  Assign(arch, nombre_archivo);
+  Assign(arch, nombre);
   Rewrite(arch);
   cargarEmpleado(e);
   While (e.apellido <> 'fin') Do
@@ -149,15 +146,12 @@ Begin
 End;
 
 
-Procedure abrir(Var arch: arch_emp);
+Procedure abrir(Var arch: arch_emp ; nombre: string);
 
 Var 
   seleccion: char;
-  nombre_archivo: string;
 Begin
-  write('Ingrese nombre de archivo: ');
-  readln(nombre_archivo);
-  Assign(arch, nombre_archivo);
+  Assign(arch, nombre);
   menu2();
   readln(seleccion);
   Case seleccion Of 
@@ -167,13 +161,13 @@ Begin
     '4': exit;
     else begin
       write('Ingrese una opcion valida');
-      abrir(arch);
+      abrir(arch, nombre);
     end;
   End;
-  abrir(arch);
+  abrir(arch, nombre);
 End;
 
-Procedure MostrarMenu(Var arch: arch_emp);
+Procedure MostrarMenu(Var arch: arch_emp ; nombre: string);
 
 Var 
   seleccion: char;
@@ -181,19 +175,22 @@ Begin
   menu();
   readln(seleccion);
   Case seleccion Of 
-    '1': crear(arch);
-    '2': abrir(arch);
+    '1': crear(arch, nombre);
+    '2': abrir(arch, nombre);
     '3': halt;
     else begin
       writeln('Ingrese una opcion valida.');
-      MostrarMenu(arch);
+      MostrarMenu(arch, nombre);
     end;
   End;
-  MostrarMenu(arch);
+  MostrarMenu(arch, nombre);
 End;
 
 Var 
   archivo : arch_emp;
+  nombre: string;
 Begin
-  MostrarMenu(archivo)
+  write('Ingrese nombre del archivo binario con el que va a trabjar: ');
+  readln(nombre);
+  MostrarMenu(archivo,nombre)
 End.
