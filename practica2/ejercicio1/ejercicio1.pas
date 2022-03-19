@@ -25,7 +25,7 @@ type
     // Como el detalle debe tener el mismo corte de control utilizo el cod_emp y un monto diario para actualizar //
     empleados_detalles = record
         cod_emp : integer;
-        monto_diario = real;
+        monto_diario : real;
     end;
     empleados_m = file of empleados;
     empleados_d = file of empleados_detalles;
@@ -35,7 +35,7 @@ type
         if not eof(detalle) then
             read(detalle,empleados_detalles)
         else 
-            empleados_detalles.cod = corte;
+            empleados_detalles.cod_emp := corte;
     end;
 
     // En compactar recibo por parametro el maestro y el detalle //
@@ -50,21 +50,21 @@ type
         reset(detalle);
         // Leo el archivo del detalle, saco el codigo y mientras el codigo del detalle sea distinto al corte//
         leer(detalle,eD);
-        while(eD.cod <> corte) do begin
+        while(eD.cod_emp <> corte) do begin
             // Leo el registro del archivo del maestro//
             read(maestro,eM);
             // Mientras el codigo sea distinto del archivo maestro al del detalle, leo hasta que sean iguales//
-            while(eM.cod <> eD.cod) do 
+            while(eM.cod_emp <> eD.cod_emp) do 
                 read(maestro,eM);
             // Cuando son iguales hago un while hasta que sean distintos, es decir, trato de buscar todas las ocurriencias para ese mismo codigo //
-            while(eD.cod = eM.cod) do begin
+            while(eD.cod_emp = eM.cod_emp) do begin
                 // Voy sumando los montos diarios al monto del maestro //
-                eM.monto_com = eM.monto_com + eD.monto_com;
+                eM.monto_com := eM.monto_com + eD.monto_diario;
                 // Leo el detalle //
                 leer(detalle,eD);
             end;
             // Me posiciono al registro anterior, en el archivo maestro, y escribo (actualizo) el registro en esa posicion//
-            seek(maestro,filepost(maestro) - 1);
+            seek(maestro,filepos(maestro) - 1);
             write(maestro,eM);
         end;
         close(maestro);
