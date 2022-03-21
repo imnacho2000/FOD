@@ -23,59 +23,98 @@ type
         monto_com : real;
     end;
     // Como el detalle debe tener el mismo corte de control utilizo el cod_emp y un monto diario para actualizar //
-    empleados_detalles = record
-        cod_emp : integer;
-        monto_diario : real;
-    end;
     empleados_m = file of empleados;
-    empleados_d = file of empleados_detalles;
     
-    procedure leer(var detalle: empleados_d; var empleados_detalles: empleados_detalles);
+    procedure leer(var maestro: empleados_m; var empleados: empleados);
     begin
-        if not eof(detalle) then
-            read(detalle,empleados_detalles)
+        if not eof(maestro) then
+            read(maestro,empleados)
         else 
-            empleados_detalles.cod_emp := corte;
+            empleados.cod_emp := corte;
     end;
 
-    // En compactar recibo por parametro el maestro y el detalle //
-    procedure compactar(var maestro: empleados_m; var detalle:empleados_d);
-    var
-        // Declaro eM como registro del maestro y eD como registro del detalle //
-        eM:empleados;
-        eD:empleados_detalles;
+    // procedure cargar_empleados(var e:empleados);
+    // begin
+    //     write('Ingrese codigo de empleado: ');
+    //     readln(e.cod_emp);
+    //     if(e.cod_emp <> -1) then begin
+    //         write('Ingrese nombre de empleado: ');
+    //         readln(e.nombre);
+    //         write('Ingrese comision: ');
+    //         readln(e.monto_com);
+    //     end;
+    // end;
+
+    // procedure crearArchivo(var archivo_empleados: empleados_m);
+    // var
+    //     e: empleados;
+    // begin
+    //     rewrite(archivo_empleados);
+    //     cargar_empleados(e);
+    //     while(e.cod_emp <> -1) do begin
+    //         write(archivo_empleados,e);
+    //         cargar_empleados(e);
+    //     end;
+    //     close(archivo_empleados);
+    // end;
+
+
+    procedure imprimirE(e: empleados);
     begin
-        // Abro tanto al maestro como el detalle//
+        writeln('');
+        writeln('Codigo de empleado: ', e.cod_emp);
+        writeln('Nombre: ', e.nombre);
+        writeln('Monto: ', e.monto_com:2:2);
+    end;
+    procedure imprimir(var arch: empleados_m);
+    var
+        e:empleados;
+    begin
+        reset(arch);
+        while not eof(arch) do begin
+            read(arch, e);
+            imprimirE(e)
+        end;
+        close(arch);
+    end;
+    // En compactar recibo por parametro el maestro y el archivo nuevo.//
+    procedure compactar(var maestro: empleados_m; var compacto: empleados_m);
+    var
+        actual_empleado:empleados;
+        empleado:empleados;
+    begin
         reset(maestro);
-        reset(detalle);
-        // Leo el archivo del detalle, saco el codigo y mientras el codigo del detalle sea distinto al corte//
-        leer(detalle,eD);
-        while(eD.cod_emp <> corte) do begin
-            // Leo el registro del archivo del maestro//
-            read(maestro,eM);
-            // Mientras el codigo sea distinto del archivo maestro al del detalle, leo hasta que sean iguales//
-            while(eM.cod_emp <> eD.cod_emp) do 
-                read(maestro,eM);
-            // Cuando son iguales hago un while hasta que sean distintos, es decir, trato de buscar todas las ocurriencias para ese mismo codigo //
-            while(eD.cod_emp = eM.cod_emp) do begin
-                // Voy sumando los montos diarios al monto del maestro //
-                eM.monto_com := eM.monto_com + eD.monto_diario;
-                // Leo el detalle //
-                leer(detalle,eD);
+        rewrite(compacto);
+        // Leo el archivo de empleados //
+        leer(maestro,empleado);
+        while(empleado.cod_emp <> corte) do begin
+            // A mi registro actual le paso los datos del registro que lei en el archivo de empleados //
+            actual_empleado.cod_emp := empleado.cod_emp;
+            actual_empleado.nombre := empleado.nombre;
+            actual_empleado.monto_com := 0;
+            // Mientras el actual sea igual al codigo del registro que voy leyendo en el archivo de empleado, le sumo la comision //
+            while(actual_empleado.cod_emp = empleado.cod_emp) do begin
+                actual_empleado.monto_com := actual_empleado.monto_com + empleado.monto_com;
+                // Leo para ver si son iguales en caso que no, escribo y le asigno al empleado actual los datos correspondientes//
+                leer(maestro,empleado);
             end;
-            // Me posiciono al registro anterior, en el archivo maestro, y escribo (actualizo) el registro en esa posicion//
-            seek(maestro,filepos(maestro) - 1);
-            write(maestro,eM);
+            // Una vez finalizada la suma y la busqueda escribo en el nuevo archivo el registro de empelado completamente. //
+            write(compacto,actual_empleado);
         end;
         close(maestro);
-        close(detalle);
+        close(compacto);
     end;
 
 var
-    detalle : empleados_d;
+    compacto : empleados_m;
     maestro : empleados_m;
 begin
-    Assign(maestro,'maestro');
-    Assign(detalle,'detalle');
-    compactar(maestro,detalle);
+    Assign(maestro,'empleados');
+    // crearArchivo(maestro);
+    Assign(compacto,'compacto');
+    writeln('Archivo antes de compactar: ');
+    imprimir(maestro);
+    compactar(maestro,compacto);
+    writeln('Archivo despues de compactar: ');
+    imprimir(compacto);
 end.
