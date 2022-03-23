@@ -1,0 +1,6 @@
+1 ricardo
+2 2 fort 
+2 mirtha 
+1 6 legrand 
+3 daiana 
+3 3 metzler 
