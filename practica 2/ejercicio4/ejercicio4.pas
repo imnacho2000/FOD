@@ -128,8 +128,11 @@ var
     rM: archivoM;
     rD: archivoD;
     indice : integer;
+    indice_str : string;
 begin
     for indice:= 1 to long_arrary do begin
+        Str(indice, indice_str);
+        assign(arrayDetalle[indice], 'Detalle '+indice_str);
         reset(arrayDetalle[indice]);
         leerArchDetalle(arrayDetalle[indice],arrayAux[indice]);
     end;
@@ -148,6 +151,7 @@ begin
             minimo(arrayDetalle,arrayAux,rD);
         end;
         write(archMaestro,rM);
+        
     end;
     
     for indice:= 1 to long_arrary do begin
@@ -185,8 +189,8 @@ var
     arrayAux: arreglo_aux;
 begin
     Assign(archMaestro,'maestro');
-    crearArchivoDetalle(arregloDetalles);
-    imprimirDetalle(arregloDetalles);
+    // crearArchivoDetalle(arregloDetalles);
+    // imprimirDetalle(arregloDetalles);
     crearArchMaestro(archMaestro,arrayAux,arregloDetalles,archDetalle);
     imprimirM(archMaestro);
 end.
