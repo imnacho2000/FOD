@@ -53,6 +53,7 @@ var
 Begin
     for indice:= 1 to long_arrary do begin
         Str(indice, str_indice);
+        assign(archDetalle[indice], 'Detalle '+str_indice);
         writeln('Archivo detalle numero: ' + str_indice);
         reset(archDetalle[indice]);
         while not eof(archDetalle[indice]) do begin
@@ -146,7 +147,6 @@ begin
         
         while (rM.cod_usuario = rD.cod_usuario) do begin
             rM.tiempo_total_de_sesiones_abiertas := rM.tiempo_total_de_sesiones_abiertas + rD.tiempo_sesion; 
-            rM.cod_usuario := rD.cod_usuario;
             rM.fecha := rD.fecha;
             minimo(arrayDetalle,arrayAux,rD);
         end;
@@ -190,7 +190,7 @@ var
 begin
     Assign(archMaestro,'maestro');
     // crearArchivoDetalle(arregloDetalles);
-    // imprimirDetalle(arregloDetalles);
+    imprimirDetalle(arregloDetalles);
     crearArchMaestro(archMaestro,arrayAux,arregloDetalles,archDetalle);
     imprimirM(archMaestro);
 end.
