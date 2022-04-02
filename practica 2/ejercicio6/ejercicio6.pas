@@ -192,7 +192,6 @@ var
     i:integer;
     i_str:string;
     rM: archivoM;
-    rMAux: archivoM;
 begin
     reset(maestro);
     for i:=1 to cantDetalles do begin
@@ -203,30 +202,19 @@ begin
     end;
     minimo(detalles, vaux, min);
     while(min.codLocalidad <> valorCorte)do begin
-        //Asigno a mi auxiliar los codigos que saque del minimo
-        rMAux.codLocalidad:= min.codLocalidad;
-        rMAux.codigoCepa := min.codCepa;
-        
-        //Mientras mi auxiliar sea el mismo que leo del minimo del detalle
-        while ((rMAux.codLocalidad = min.codLocalidad) and (rMAux.codigoCepa = min.codCepa)) do begin
-            rMAux.cantActivos := rMAux.cantActivos +  min.cantActivos;
-            rMAux.cantFallecidos :=  rMAux.cantFallecidos + min.cantFallecidos;
-            rMAux.cantRecuperados :=  rMAux.cantRecuperados + min.cantRecuperados;
-            rMAux.cantNuevos := rMAux.cantNuevos + min.cantNuevos;
-            minimo(detalles, vaux, min);
-        
-        end;
+        read(maestro,rM);  
 
-        //Leo el archivo maestro y leo hasta que sean iguales, cuando sean iguales le sumo todo al registro maestro
-        read(maestro,rM);      
-        while (rMAux.codLocalidad <> rM.codLocalidad) and (rMAux.codigoCepa <> rM.codigoCepa) do begin
+        while (rM.codLocalidad <> min.codLocalidad) and (rM.codigoCepa <> min.codCepa) do begin
             read(maestro,rM);
         end;
 
-        rM.cantActivos := rM.cantActivos +  rMAux.cantActivos;
-        rM.cantFallecidos :=  rM.cantFallecidos + rMAux.cantFallecidos;
-        rM.cantRecuperados :=  rM.cantRecuperados + rMAux.cantRecuperados;
-        rM.cantNuevos := rM.cantNuevos + rMAux.cantNuevos;
+        while ((rM.codLocalidad = min.codLocalidad) and (rM.codigoCepa = min.codCepa)) do begin
+            rM.cantActivos := rM.cantActivos +  min.cantActivos;
+            rM.cantFallecidos :=  rM.cantFallecidos + min.cantFallecidos;
+            rM.cantRecuperados :=  rM.cantRecuperados + min.cantRecuperados;
+            rM.cantNuevos := rM.cantNuevos + min.cantNuevos;
+            minimo(detalles, vaux, min);
+        end;
 
         seek(maestro,filepos(maestro) - 1);
         write(maestro,rM);

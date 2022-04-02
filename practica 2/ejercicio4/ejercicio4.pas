@@ -17,7 +17,7 @@
 program ejercicio4;
 const
     corte = 9999;
-    long_arrary = 5;
+    long_arrary = 3;
 type
     archivoM = record
         cod_usuario : integer;
@@ -35,6 +35,32 @@ type
 
     arreglo_detalle = array [1..long_arrary] of archivo_detalles;
     arreglo_aux = array [1..long_arrary] of archivoD;
+
+    procedure cargarEmpleado(var rM: archivoM);
+    begin
+        write('Ingrese codigo de usuario: ');
+        readln(rM.cod_usuario);
+        if(rM.cod_usuario <> -1) then begin
+            write('Ingrese fecha: ');
+            readln(rM.fecha);
+            write('Ingrese tiempo de sesion: ');
+            readln(rM.tiempo_total_de_sesiones_abiertas);
+        end;
+    end;
+
+    procedure crearArchivoMaestro(var arch: archivo_maestro);
+    var
+        rM: archivoM;
+    begin
+        rewrite(arch);
+        cargarEmpleado(rM);
+        while(rM.cod_usuario <> -1) do begin
+            write(arch,rM);
+            cargarEmpleado(rM);
+        end;
+        close(arch);
+    end;
+
 
 procedure imprimirDetalles(var rD: archivoD);
 begin
@@ -64,6 +90,18 @@ Begin
     end;
 end;
 
+procedure leerArchivo(var rD:archivoD);
+begin
+    write('Ingrese codigo de usuario: ');
+    readln(rD.cod_usuario);
+    if(rD.cod_usuario <> -1) then begin
+        write('Ingrese fecha: ');
+        readln(rD.fecha);
+        write('Ingrese tiempo de sesion: ');
+        readln(rD.tiempo_sesion);
+    end;
+end;
+
 procedure crearArchivoDetalle(var arregloDetalles: arreglo_detalle);
 var
     indice: integer;
@@ -76,16 +114,10 @@ begin
         Str(indice, str_indice);
         assign(arregloDetalles[indice], 'Detalle '+str_indice);
         rewrite(arregloDetalles[indice]);
-        write('Ingrese codigo de usuario: ');
-        readln(rD.cod_usuario);
-        while(rD.cod_usuario <> 0) do begin
-            write('Ingrese fecha: ');
-            readln(rD.fecha);
-            write('Ingrese tiempo de sesion: ');
-            readln(rD.tiempo_sesion);
+        leerArchivo(rD);
+        while(rD.cod_usuario <> -1) do begin
             write(arregloDetalles[indice],rD);
-            write('Ingrese codigo de usuario: ');
-            readln(rD.cod_usuario);
+            leerArchivo(rD);
         end;
         close(arregloDetalles[indice]);
     end;
@@ -106,21 +138,17 @@ end;
 procedure minimo(var arrayDetalle: arreglo_detalle; var arrayRD: arreglo_aux ; var rD: archivoD);
 var
     indice: integer;
-    minCod: integer;
     minPos: integer;
 begin
-    minPos:= 1;
-    minCod := 9999;
+    rD.cod_usuario := 9999;
     for indice:= 1 to long_arrary do begin
-        if(arrayRD[indice].cod_usuario <= minCod) then begin
-            minCod:= arrayRD[indice].cod_usuario;
+        if(arrayRD[indice].cod_usuario <   rD.cod_usuario) then begin
             rD := arrayRD[indice];
             minPos:= indice;
         end;
     end;
     if (rD.cod_usuario <> corte) then
         leerArchDetalle(arrayDetalle[minPos],arrayRD[minPos]);
-
 end;
 
 
@@ -137,23 +165,20 @@ begin
         reset(arrayDetalle[indice]);
         leerArchDetalle(arrayDetalle[indice],arrayAux[indice]);
     end;
-    rewrite(archMaestro);
+    reset(archMaestro);
     minimo(arrayDetalle,arrayAux,rD);
     while(rD.cod_usuario <> corte) do begin
-    
-        rM.cod_usuario := rD.cod_usuario;
-        rM.fecha := rD.fecha;
-        rM.tiempo_total_de_sesiones_abiertas:= 0;
-        
+        read(archMaestro,rM);
+        while(rM.cod_usuario <> rD.cod_usuario) do begin
+            read(archMaestro,rM);
+        end;
         while (rM.cod_usuario = rD.cod_usuario) do begin
             rM.tiempo_total_de_sesiones_abiertas := rM.tiempo_total_de_sesiones_abiertas + rD.tiempo_sesion; 
-            rM.fecha := rD.fecha;
             minimo(arrayDetalle,arrayAux,rD);
         end;
+        seek(archMaestro,filepos(archMaestro) - 1);
         write(archMaestro,rM);
-        
     end;
-    
     for indice:= 1 to long_arrary do begin
         close(arrayDetalle[indice]);
     end;
@@ -190,7 +215,8 @@ var
 begin
     Assign(archMaestro,'maestro');
     // crearArchivoDetalle(arregloDetalles);
-    imprimirDetalle(arregloDetalles);
+    // imprimirDetalle(arregloDetalles);
+    // crearArchivoMaestro(archMaestro);
     crearArchMaestro(archMaestro,arrayAux,arregloDetalles,archDetalle);
     imprimirM(archMaestro);
 end.
