@@ -141,13 +141,13 @@ type
                         write('idUsuario ',id_usuario_aux);
                         while (anio = rM.anio) and (mes_aux = rM.mes) and (dia_aux = rM.dia) and (id_usuario_aux = rM.idUsuario) do begin
                             total_acceso_dia := total_acceso_dia + rM.tiempo_acceso;
+                            write('   Tiempo total de acceso en el dia ', dia_aux, ' mes ', mes_aux,#10);
+                            writeln(rM.tiempo_acceso);
                             leer(arch,rM);
                         end;
-                        write('   Tiempo total de acceso en el dia ', dia_aux, ' mes ', mes_aux,#10);
-                        writeln(total_acceso_dia);
                     end;
                     //Aca calculo el mes.
-                    total_mes := total_mes + (total_acceso_dia * dia_aux);
+                    total_mes := total_mes + total_acceso_dia;
                     writeln('Total tiempo de acceso mes ', mes_aux);
                     writeln(total_mes);
                 end;
