@@ -99,26 +99,22 @@ type
     var
         rM: archM;
         rD: archD;
-        rDAux: archD;
     begin
         reset(arch);
         reset(archD);
         leer(archD,rD);
         while(rD.codigo_producto <> valorCorte) do begin
-            rDAux.codigo_producto := rD.codigo_producto;
-            rDAux.cantidad_vendida := 0;
+            read(arch,rM);
+
+            while (rD.codigo_producto <> rM.codigo_producto) do begin
+                read(arch,rM);
+            end;
             
-            while(rD.codigo_producto = rDAux.codigo_producto) do begin
-                rDAux.cantidad_vendida := rDAux.cantidad_vendida + rD.cantidad_vendida;
+            while(rD.codigo_producto = rM.codigo_producto) do begin
+                rM.stock_actual := rM.stock_actual - rD.cantidad_vendida;
                 leer(archD,rD);
             end;
 
-            read(arch,rM);
-            while (rDAux.codigo_producto <> rM.codigo_producto) do begin
-                read(arch,rM);
-            end;
-
-            rM.stock_actual := rM.stock_actual - rDAux.cantidad_vendida;
             seek(arch,filepos(arch)-1);
             write(arch,rM);
         end;

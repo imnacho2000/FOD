@@ -1,3 +1,3 @@
-Codigo de producto: 1 Precio de venta: $200.00 Stock actual: -240 Stock minimo: 7 Nombre comercial: "Zapatillas nike" 
-Codigo de producto: 2 Precio de venta: $50.00 Stock actual: -495 Stock minimo: 20 Nombre comercial: "Remera nike" 
-Codigo de producto: 3 Precio de venta: $350.00 Stock actual: -2740 Stock minimo: 30 Nombre comercial: "Perfume Rabanne" 
+Codigo de producto: 1 Precio de venta: $200.00 Stock actual: -360 Stock minimo: 7 Nombre comercial: "Zapatillas nike" 
+Codigo de producto: 2 Precio de venta: $50.00 Stock actual: -735 Stock minimo: 20 Nombre comercial: "Remera nike" 
+Codigo de producto: 3 Precio de venta: $350.00 Stock actual: -4060 Stock minimo: 30 Nombre comercial: "Perfume Rabanne" 
