@@ -326,13 +326,12 @@ type
             rM.nombreP := rDN.nombreP;
             rM.apellidoP := rDN.apellidoP;
             rM.dniP := rDN.dniP;
-            rM.estaMuerto := False;
+            rM.matriculaMedico:= '';
             if(rDN.nro = rDF.nro) then begin
                 rM.matriculaMedico := rDF.matricula;
                 rM.fecha := rDF.fecha;
                 rM.hora := rDF.hora;
                 rM.lugar := rDF.lugar;
-                rM.estaMuerto := True;
                 minimoF(arrayF,arrayFAux,rDF);
             end;
             write(archM,rM);
@@ -356,7 +355,7 @@ begin
     while not eof(archM) do begin
         read(archM,rM);
         write(archivo_txt,'Numero de partida de nacimiento: ', rM.nroP, ', Nombre: ', rM.nombre, ', Apellido: ', rM.apellido, ', Direccion: ', rM.direccion, ', Matricula del medico: ', rM.matricula, ', Nombre de la madre: ', rM.nombreM, ', Apellido de la madre: ', rM.apellidoM, ', Dni de la madre: ', rM.dniM, ', Nombre del padre: ', rM.nombreP, ', Apellido del padre: ', rM.apellidoP, ', Dni del padre: ', rM.dniP, #10);
-        if(rM.estaMuerto = True) then 
+        if(rM.matriculaMedico <> '') then 
             write(archivo_txt, ', Matricula del medico que firma el deceso: ',rM.matriculaMedico, ', Fecha: ',rM.fecha, ', Hora: ',rM.hora, ', Lugar: ', rM.lugar);
         writeln(archivo_txt, ' ');
     end;
