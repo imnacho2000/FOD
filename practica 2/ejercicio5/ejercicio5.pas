@@ -44,7 +44,8 @@ type
         matriculaMedico : string[25];
         fecha : string[25];
         hora : string[5];
-        lugar : string[25];      
+        lugar : string[25];    
+        estaMuerto : boolean;  
     end;
 
 
@@ -325,11 +326,13 @@ type
             rM.nombreP := rDN.nombreP;
             rM.apellidoP := rDN.apellidoP;
             rM.dniP := rDN.dniP;
+            rM.estaMuerto := False;
             if(rDN.nro = rDF.nro) then begin
                 rM.matriculaMedico := rDF.matricula;
                 rM.fecha := rDF.fecha;
                 rM.hora := rDF.hora;
                 rM.lugar := rDF.lugar;
+                rM.estaMuerto := True;
                 minimoF(arrayF,arrayFAux,rDF);
             end;
             write(archM,rM);
@@ -353,7 +356,7 @@ begin
     while not eof(archM) do begin
         read(archM,rM);
         write(archivo_txt,'Numero de partida de nacimiento: ', rM.nroP, ', Nombre: ', rM.nombre, ', Apellido: ', rM.apellido, ', Direccion: ', rM.direccion, ', Matricula del medico: ', rM.matricula, ', Nombre de la madre: ', rM.nombreM, ', Apellido de la madre: ', rM.apellidoM, ', Dni de la madre: ', rM.dniM, ', Nombre del padre: ', rM.nombreP, ', Apellido del padre: ', rM.apellidoP, ', Dni del padre: ', rM.dniP, #10);
-        if(rM.matriculaMedico <> '') then 
+        if(rM.estaMuerto = True) then 
             write(archivo_txt, ', Matricula del medico que firma el deceso: ',rM.matriculaMedico, ', Fecha: ',rM.fecha, ', Hora: ',rM.hora, ', Lugar: ', rM.lugar);
         writeln(archivo_txt, ' ');
     end;
@@ -370,12 +373,12 @@ begin
     Assign(maestro,'maestro');
     // crearArchDetalleNacimiento(arrayN);
     // crearArchDetalleFallecimiento(arrayF);
-    writeln('Detalles nacimientos: ');
-    imprimirDetalleNacimiento(arrayN);
-    writeln('---------------------------');
-    writeln('Detalles Fallecimientos: ');
-    imprimirDetalleFallecimiento(arrayF);
-    writeln('---------------------------');
+    // writeln('Detalles nacimientos: ');
+    // imprimirDetalleNacimiento(arrayN);
+    // writeln('---------------------------');
+    // writeln('Detalles Fallecimientos: ');
+    // imprimirDetalleFallecimiento(arrayF);
+    // writeln('---------------------------');
     crearArchivoMaestro(maestro,arrayF,arrayN);
     crearArchivoTxt(maestro);
 end.
