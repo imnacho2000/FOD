@@ -91,8 +91,8 @@ type
                     leer(arch,rM);
                 end;
                 total_votos_provincia:= total_votos_provincia + cantidad_votos_aux;
-                writeln('Total de Votos Provincia: ',total_votos_provincia);
             end;
+            writeln('Total de Votos Provincia: ',total_votos_provincia);
             total_general_votos:= total_general_votos + total_votos_provincia;
         end;
         write('Total General de Votos: ',total_general_votos);
