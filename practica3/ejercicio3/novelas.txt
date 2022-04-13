@@ -1,0 +1,21 @@
+Codigo de novela: 0
+Genero de novela: 5
+Nombre de la novela: 5
+Duracion de la novela: 5
+Director de la novela: 5
+Precio de la novela: $5.00
+
+Codigo de novela: 4
+Genero de novela: xd
+Nombre de la novela: xd
+Duracion de la novela: 4
+Director de la novela: 4
+Precio de la novela: $4.00
+
+Codigo de novela: 5
+Genero de novela: 5
+Nombre de la novela: 5
+Duracion de la novela: 5
+Director de la novela: 5
+Precio de la novela: $5.00
+
