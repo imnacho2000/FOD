@@ -137,8 +137,8 @@ type
             end;  
         end;
         Close(m);
-        Erase(m);
         close(m_aux);
+        Erase(m);
         Rename(m_aux,'maestro');
     end;
 
