@@ -58,7 +58,6 @@ type
 
     procedure eliminar(var m:maestro);
     var
-        head:integer;
         reg_m: ave;
         especie:string[25];
     begin
@@ -82,33 +81,71 @@ type
         end;
     end;
 
+    procedure compactar(var m:maestro; pos:integer ; var cont: integer);
+    var
+        reg: ave;
+        last_pos: integer;
+    begin
+        last_pos := filesize(m) - 1;
+        seek(m,(last_pos - cont));
+        read(m, reg);
+        seek(m,pos);
+        write(m,reg);
+        cont:= cont + 1;
+    end;
+
     procedure compactar_maestro(var m:maestro);
     var
-        reg_m: prendas;
-        reg_aux: prendas;
-        m_aux: maestro;
+       reg_m: ave;
+       cont: integer;
     begin
-        assign(m_aux,'maestro_aux');
-        rewrite(m_aux);
+        cont:= 0;
         reset(m);
-        leer_maestro(m,reg_m);
-        while (reg_m.cod <> 9999) do begin
-            reg_aux:= reg_m;
-            while (reg_aux.cod = reg_m.cod) do begin
-                if(reg_aux.stock > 0 ) then
-                    write(m_aux,reg_m);
-                leer_maestro(m,reg_m);
-            end;  
+        while (filepos(m) <> filesize(m) - cont) do begin
+            read(m, reg_m);
+            if (pos('@',reg_m.nombre) <> 0 ) then begin
+                compactar(m,(filepos(m) - 1),cont);
+                seek(m, filepos(m)-1);
+            end;
         end;
-        Close(m);
-        close(m_aux);
-        Erase(m);
-        Rename(m_aux,'maestro');
+        seek(m, (filesize(m)-cont));
+        truncate(m);
+        close(m)
+    end;
+
+
+    procedure imprimir_ave(reg_m: ave);
+    begin
+        writeln('');
+        writeln('Codigo de ave: ', reg_m.cod);
+        writeln('Nombre de especie de ave: ', reg_m.nombre);
+        writeln('Familia de ave: ', reg_m.familia);
+        writeln('Descripcion de ave: ', reg_m.descripcion);
+        writeln('Zona geográfica de ave: ', reg_m.zona);
+        writeln('');
+    end;
+
+    procedure imprimir(var m:maestro);
+    var
+        reg_m: ave;
+    begin
+        reset(m);
+        while not eof(m) do begin
+            read(m, reg_m);
+            imprimir_ave(reg_m);
+        end;
+        close(m);
     end;
 
 var
     m:maestro;
 begin
     Assign(m,'maestro');
-    crear_maestro(m);
+    // crear_maestro(m);
+    writeln('Antes de eliminar: ');
+    imprimir(m);
+    eliminar(m);
+    writeln('Despues de eliminar: ');
+    compactar_maestro(m);
+    imprimir(m);
 end.
