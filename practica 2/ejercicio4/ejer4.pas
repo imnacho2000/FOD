@@ -10,7 +10,7 @@ Notas:
 - Cada archivo detalle está ordenado por cod_usuario y fecha.
 - Un usuario puede iniciar más de una sesión el mismo día en la misma o en diferentes
 máquinas.
-- El archivo maestro debe crearse en la siguiente ubicación física: puto el que lee.}
+- El archivo maestro debe crearse en la siguiente ubicación física:  /var/log.}
 
 program ejer4;
 //maquinas
@@ -22,14 +22,14 @@ type
 
     campos_detalle = record
         cod: integer;
-        fecha: string;
+        fecha: longint;
         tiempo: integer;
     end;
 
 
     campo_maestro = record
         cod:integer;
-        fecha:string;
+        fecha:longint;
         tiempo_total:integer;
     end;
 
@@ -92,7 +92,7 @@ begin
     min_pos:=1;
     min.cod:=valor_alto;
     for i:=1 to cant_detalles do begin
-        if(v_act[i].cod < min.cod)then begin
+        if(v_act[i].cod < min.cod) and (v_act[i].fecha < min.fecha)then begin
             min:= v_act[i];
             min_pos:= i;
         end;
@@ -121,7 +121,8 @@ begin
     while (min.cod <> valor_alto) do begin
         reg_m.cod := min.cod;
         reg_m.tiempo_total:= 0;
-        while(min.cod = reg_m.cod) do begin
+        reg_m.fecha := min.fecha;
+        while(min.cod = reg_m.cod) and (min.fecha = reg_m.fecha) do begin
             reg_m.tiempo_total := reg_m.tiempo_total + min.tiempo;
             reg_m.fecha := min.fecha;
             minimo(v_registro, vector_de_archivos, min);
